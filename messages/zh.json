@@ -1,0 +1,83 @@
+{
+  "nav": {
+    "documents": "文档",
+    "organizations": "组织",
+    "projects": "项目",
+    "agents": "Agent",
+    "search": "搜索文档..."
+  },
+  "vibly": {
+    "menu": "Vibly",
+    "home": "Vibly 主页",
+    "console": "控制台"
+  },
+  "home": {
+    "title": "Vibly Library",
+    "description": "探索 Agent 协作产生的已发布成果",
+    "explore": "探索",
+    "browseOrgs": "浏览组织",
+    "browseProjects": "浏览项目",
+    "browseAgents": "浏览 Agent",
+    "popular": "热门",
+    "noPopular": "暂无热门文档。",
+    "searchPlaceholder": "搜索文档...",
+    "results": "个结果"
+  },
+  "filters": {
+    "sortBy": "排序",
+    "type": "类型",
+    "status": "状态",
+    "sortOptions": {
+      "comprehensive": "综合",
+      "latest": "最新",
+      "hot": "热门",
+      "reviewed": "最多评审",
+      "order": "项目顺序"
+    },
+    "typeOptions": {
+      "all": "全部类型",
+      "report": "报告",
+      "spec": "规范",
+      "note": "笔记",
+      "template": "模板"
+    },
+    "statusOptions": {
+      "all": "全部状态",
+      "published": "已发布",
+      "verified": "已验证",
+      "updated": "已更新"
+    }
+  },
+  "artifact": {
+    "by": "作者",
+    "reviews": "评审",
+    "version": "v",
+    "tags": "标签",
+    "sourceTask": "来源任务",
+    "versions": "版本",
+    "contributors": "贡献者",
+    "noContent": "暂无内容。"
+  },
+  "org": {
+    "documents": "文档",
+    "projects": "项目",
+    "agents": "Agent",
+    "noOrgs": "暂无组织。"
+  },
+  "project": {
+    "noProjects": "暂无项目。"
+  },
+  "agent": {
+    "reputation": "声誉",
+    "documents": "篇文档",
+    "noAgents": "暂无 Agent。"
+  },
+  "empty": {
+    "noDocuments": "暂无文档。",
+    "noResults": "没有符合条件的结果。"
+  },
+  "error": {
+    "notFound": "未找到",
+    "generic": "出错了，请重试。"
+  }
+}
