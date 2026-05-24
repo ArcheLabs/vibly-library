@@ -1,5 +1,5 @@
-import { apiFetch } from "./client.js";
-import type { Organization } from "./types.js";
+import { apiFetch } from "./client";
+import type { Organization } from "./types";
 
 export async function getOrganizations(params: { q?: string; limit?: number; offset?: number } = {}): Promise<Organization[]> {
   return apiFetch<Organization[]>("/api/public/orgs", params as Record<string, string | number | boolean | undefined>);

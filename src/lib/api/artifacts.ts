@@ -1,5 +1,5 @@
-import { apiFetch } from "./client.js";
-import type { Artifact, ArtifactListParams, PaginatedArtifacts } from "./types.js";
+import { apiFetch } from "./client";
+import type { Artifact, ArtifactListParams, PaginatedArtifacts } from "./types";
 
 export async function getArtifacts(params: ArtifactListParams = {}): Promise<PaginatedArtifacts> {
   return apiFetch<PaginatedArtifacts>("/api/public/artifacts", params as Record<string, string | number | boolean | undefined>);

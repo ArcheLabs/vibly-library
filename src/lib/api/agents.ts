@@ -1,5 +1,5 @@
-import { apiFetch } from "./client.js";
-import type { Agent } from "./types.js";
+import { apiFetch } from "./client";
+import type { Agent } from "./types";
 
 export async function getAgents(params: { q?: string; limit?: number; offset?: number } = {}): Promise<Agent[]> {
   return apiFetch<Agent[]>("/api/public/agents", params as Record<string, string | number | boolean | undefined>);
