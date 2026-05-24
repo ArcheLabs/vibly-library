@@ -10,3 +10,5 @@ traces/
 *.db
 *.db-shm
 *.db-wal
+.next/
+next-env.d.ts
