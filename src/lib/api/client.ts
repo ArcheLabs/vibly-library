@@ -38,7 +38,11 @@ export async function apiFetch<T>(
     }
   }
 
-  const res = await fetch(fullUrl.toString(), { next: { revalidate: 60 } });
+  const isServer = typeof window === "undefined";
+  const res = await fetch(fullUrl.toString(), isServer
+    ? { next: { revalidate: 60 } }
+    : { headers: { "x-vibly-client-version": "0.1.0" } },
+  );
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({})) as Record<string, unknown>;
