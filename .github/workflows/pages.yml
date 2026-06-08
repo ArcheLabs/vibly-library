@@ -43,7 +43,7 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-          # GITHUB_PAGES: "true"
+          GITHUB_PAGES: "true"
           NEXT_PUBLIC_COORDINATOR_URL: ${{ vars.NEXT_PUBLIC_COORDINATOR_URL }}
 
       - name: Add nojekyll
