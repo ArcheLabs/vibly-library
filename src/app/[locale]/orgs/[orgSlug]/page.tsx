@@ -1,4 +1,4 @@
-import { getOrganization, getOrganizations } from "@/lib/api/orgs";
+import { getOrganization } from "@/lib/api/orgs";
 import { getArtifacts } from "@/lib/api/artifacts";
 import { getProjects } from "@/lib/api/projects";
 import { OrganizationHeader } from "@/components/orgs/OrganizationHeader";
@@ -7,15 +7,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
-export const revalidate = 60;
-
 export async function generateStaticParams() {
-  try {
-    const orgs = await getOrganizations();
-    return orgs.map((o: { slug: string }) => ({ orgSlug: o.slug }));
-  } catch {
-    return [];
-  }
+  return [];
 }
 
 export async function generateMetadata({
