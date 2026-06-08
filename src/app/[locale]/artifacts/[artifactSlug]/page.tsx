@@ -6,10 +6,6 @@ import { ArrowLeft, ShieldCheck, RefreshCw, MessageSquare, Flame, Tag, BookOpen 
 import { formatDistanceToNow } from "date-fns";
 import type { Metadata } from "next";
 
-export async function generateStaticParams() {
-  return [];
-}
-
 export async function generateMetadata({
   params,
 }: {

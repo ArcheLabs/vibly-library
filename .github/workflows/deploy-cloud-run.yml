@@ -1,0 +1,58 @@
+name: Deploy Cloud Run
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: vibly-496706
+  REGION: asia-east1
+  SERVICE: vibly-library
+  ARTIFACT_REPOSITORY: vibly
+  NEXT_PUBLIC_COORDINATOR_URL: ${{ vars.NEXT_PUBLIC_COORDINATOR_URL }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
+
+      - name: Build image
+        run: |
+          IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPOSITORY/$SERVICE:$GITHUB_SHA"
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          docker build \
+            --build-arg NEXT_PUBLIC_COORDINATOR_URL="$NEXT_PUBLIC_COORDINATOR_URL" \
+            -t "$IMAGE" .
+
+      - name: Push image
+        run: docker push "$IMAGE"
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy "$SERVICE" \
+            --project "$PROJECT_ID" \
+            --region "$REGION" \
+            --image "$IMAGE" \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars NEXT_PUBLIC_COORDINATOR_URL="$NEXT_PUBLIC_COORDINATOR_URL"

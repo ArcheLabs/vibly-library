@@ -1,6 +1,5 @@
 packages:
   - "."
-  - "../vibly-coordinator-http-contract"
 allowBuilds:
   '@parcel/watcher': true
   '@swc/core': true

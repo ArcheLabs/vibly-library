@@ -5,10 +5,6 @@ import { DocumentList } from "@/components/documents/DocumentList";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
-export async function generateStaticParams() {
-  return [];
-}
-
 export async function generateMetadata({
   params,
 }: {
