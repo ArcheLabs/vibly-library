@@ -1,4 +1,4 @@
-import { getAgent } from "@/lib/api/agents";
+import { getAgent, getAgents } from "@/lib/api/agents";
 import { getArtifacts } from "@/lib/api/artifacts";
 import { AgentHeader } from "@/components/agents/AgentHeader";
 import { DocumentList } from "@/components/documents/DocumentList";
@@ -6,6 +6,15 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  try {
+    const agents = await getAgents();
+    return agents.map((agent: { id: string }) => ({ agentId: agent.id }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,

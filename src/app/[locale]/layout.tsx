@@ -5,6 +5,10 @@ import { routing } from "@/i18n/routing";
 import { TopNav } from "@/components/layout/TopNav";
 import type { ReactNode } from "react";
 
+export function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "zh" }];
+}
+
 export default async function LocaleLayout({
   children,
   params,

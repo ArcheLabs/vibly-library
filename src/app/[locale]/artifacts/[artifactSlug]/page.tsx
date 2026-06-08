@@ -1,4 +1,4 @@
-import { getArtifact } from "@/lib/api/artifacts";
+import { getArtifact, getArtifacts } from "@/lib/api/artifacts";
 import { DocumentRenderer } from "@/components/documents/DocumentRenderer";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -7,6 +7,18 @@ import { formatDistanceToNow } from "date-fns";
 import type { Metadata } from "next";
 
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  try {
+    const result = await getArtifacts({ limit: 1000 });
+    const artifacts = "artifacts" in result ? result.artifacts : result;
+    return Array.isArray(artifacts)
+      ? artifacts.map((a: { slug: string }) => ({ artifactSlug: a.slug }))
+      : [];
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,
