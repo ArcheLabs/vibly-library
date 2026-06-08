@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: process.env.NODE_ENV === "production",
   typedRoutes: false,
 
-  // Required for GitHub Pages static deployment
-  output: "export",
+  // Static export only for GitHub Pages; Cloud Run uses server mode.
+  output: isGithubPages ? "export" : undefined,
 
   // Safer for GitHub Pages nested routes
   trailingSlash: true,
