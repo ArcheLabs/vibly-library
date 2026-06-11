@@ -1,6 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
 import { useTranslations, useLocale } from "next-intl";
-import { BookOpen } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ViblyMenu } from "./ViblyMenu";
@@ -22,7 +22,7 @@ export function TopNav() {
         <div className="flex h-14 items-center gap-6">
           {/* Logo */}
           <Link href={`/${locale}`} className="flex items-center gap-2 font-semibold text-[var(--text)] shrink-0">
-            <BookOpen size={18} className="text-[var(--brand-accent)]" />
+            <Image src="/assets/vibly-logo-icon.svg" alt="Vibly" width={22} height={22} className="shrink-0" />
             <span>Vibly Library</span>
           </Link>
 
