@@ -39,6 +39,8 @@ RUN useradd --system --uid 1001 nextjs
 COPY --from=builder /app/messages ./messages
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+# Static assets (logo, favicon, etc.)
+COPY --from=builder /app/public ./public
 
 USER nextjs
 
