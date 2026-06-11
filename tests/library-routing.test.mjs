@@ -61,3 +61,15 @@ test("org and agent details are dynamic and use the same identifiers as list hre
     assert.doesNotMatch(source, /generateStaticParams/);
   }
 });
+
+test("client fetches use the same-origin public API proxy", () => {
+  const clientSource = readFileSync(new URL("../src/lib/api/client.ts", import.meta.url), "utf8");
+  const proxySource = readFileSync(new URL("../src/app/api/public/[...path]/route.ts", import.meta.url), "utf8");
+
+  assert.match(clientSource, /buildLocalApiUrl/);
+  assert.match(clientSource, /window\.location\.origin/);
+  assert.match(clientSource, /buildCoordinatorUrl\(path, params\)/);
+  assert.match(proxySource, /versionHeaders\(\)/);
+  assert.match(proxySource, /cache: "no-store"/);
+  assert.match(proxySource, /\/api\/public\//);
+});
