@@ -7,7 +7,9 @@
  *   no CORS issues). The proxy in turn forwards to the coordinator server-side.
  */
 
-const DEFAULT_COORDINATOR_URL = "http://localhost:3001";
+const LOCAL_COORDINATOR_URL = "http://localhost:3001";
+const PRODUCTION_COORDINATOR_URL = "https://vibly-coordinator-910361199868.asia-east1.run.app";
+const DEFAULT_COORDINATOR_URL = process.env.NODE_ENV === "production" ? PRODUCTION_COORDINATOR_URL : LOCAL_COORDINATOR_URL;
 
 /** True when running in a browser (client component / useEffect). */
 

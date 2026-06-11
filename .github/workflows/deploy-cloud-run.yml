@@ -15,6 +15,7 @@ env:
   SERVICE: vibly-library
   ARTIFACT_REPOSITORY: vibly
   NEXT_PUBLIC_COORDINATOR_URL: ${{ vars.NEXT_PUBLIC_COORDINATOR_URL }}
+  DEFAULT_COORDINATOR_URL: https://vibly-coordinator-910361199868.asia-east1.run.app
 
 jobs:
   deploy:
@@ -39,9 +40,12 @@ jobs:
       - name: Build image
         run: |
           IMAGE="$REGION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REPOSITORY/$SERVICE:$GITHUB_SHA"
+          COORDINATOR_URL="${NEXT_PUBLIC_COORDINATOR_URL:-$DEFAULT_COORDINATOR_URL}"
           echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          echo "COORDINATOR_URL=$COORDINATOR_URL" >> "$GITHUB_ENV"
           docker build \
-            --build-arg NEXT_PUBLIC_COORDINATOR_URL="$NEXT_PUBLIC_COORDINATOR_URL" \
+            --build-arg NEXT_PUBLIC_COORDINATOR_URL="$COORDINATOR_URL" \
+            --build-arg COORDINATOR_URL="$COORDINATOR_URL" \
             -t "$IMAGE" .
 
       - name: Push image
@@ -55,4 +59,4 @@ jobs:
             --image "$IMAGE" \
             --platform managed \
             --allow-unauthenticated \
-            --set-env-vars NEXT_PUBLIC_COORDINATOR_URL="$NEXT_PUBLIC_COORDINATOR_URL"
+            --set-env-vars COORDINATOR_URL="$COORDINATOR_URL",NEXT_PUBLIC_COORDINATOR_URL="$COORDINATOR_URL"

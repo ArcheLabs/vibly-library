@@ -73,3 +73,17 @@ test("client fetches use the same-origin public API proxy", () => {
   assert.match(proxySource, /cache: "no-store"/);
   assert.match(proxySource, /\/api\/public\//);
 });
+
+test("production deployments do not fall back to localhost coordinator", () => {
+  const clientSource = readFileSync(new URL("../src/lib/api/client.ts", import.meta.url), "utf8");
+  const workflowSource = readFileSync(new URL("../.github/workflows/deploy-cloud-run.yml", import.meta.url), "utf8");
+  const dockerfileSource = readFileSync(new URL("../Dockerfile", import.meta.url), "utf8");
+
+  assert.match(clientSource, /PRODUCTION_COORDINATOR_URL = "https:\/\/vibly-coordinator-910361199868\.asia-east1\.run\.app"/);
+  assert.match(clientSource, /NODE_ENV === "production" \? PRODUCTION_COORDINATOR_URL : LOCAL_COORDINATOR_URL/);
+  assert.match(workflowSource, /DEFAULT_COORDINATOR_URL: https:\/\/vibly-coordinator-910361199868\.asia-east1\.run\.app/);
+  assert.match(workflowSource, /COORDINATOR_URL="\$\{NEXT_PUBLIC_COORDINATOR_URL:-\$DEFAULT_COORDINATOR_URL\}"/);
+  assert.match(workflowSource, /--set-env-vars COORDINATOR_URL="\$COORDINATOR_URL",NEXT_PUBLIC_COORDINATOR_URL="\$COORDINATOR_URL"/);
+  assert.match(dockerfileSource, /ARG COORDINATOR_URL/);
+  assert.match(dockerfileSource, /ENV COORDINATOR_URL=\$COORDINATOR_URL/);
+});

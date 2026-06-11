@@ -17,13 +17,38 @@ export async function GET(request: NextRequest, context: RouteContext): Promise<
     upstreamUrl.searchParams.append(key, value);
   });
 
-  const upstream = await fetch(upstreamUrl.toString(), {
-    cache: "no-store",
-    headers: {
-      ...versionHeaders(),
-      accept: request.headers.get("accept") ?? "application/json",
-    },
-  });
+  let upstream: Response;
+  try {
+    upstream = await fetch(upstreamUrl.toString(), {
+      cache: "no-store",
+      headers: {
+        ...versionHeaders(),
+        accept: request.headers.get("accept") ?? "application/json",
+      },
+    });
+  } catch (error) {
+    const cause = error instanceof Error ? error.message : String(error);
+    console.warn("[vibly-library] public api proxy fetch failed", {
+      upstreamOrigin: upstreamUrl.origin,
+      upstreamPath: `${upstreamUrl.pathname}${upstreamUrl.search}`,
+      reason: cause,
+    });
+
+    return Response.json(
+      {
+        ok: false,
+        error: {
+          code: "UPSTREAM_FETCH_FAILED",
+          message: "Failed to fetch Coordinator public API.",
+          details: {
+            upstreamOrigin: upstreamUrl.origin,
+            upstreamPath: `${upstreamUrl.pathname}${upstreamUrl.search}`,
+          },
+        },
+      },
+      { status: 502 },
+    );
+  }
 
   return new Response(upstream.body, {
     status: upstream.status,
