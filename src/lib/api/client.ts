@@ -8,7 +8,10 @@
  */
 
 const COORDINATOR_URL =
-  process.env.NEXT_PUBLIC_COORDINATOR_URL ?? "http://localhost:3001";
+  process.env.COORDINATOR_URL ??
+  process.env.LUMEN_COORDINATOR_URL ??
+  process.env.NEXT_PUBLIC_COORDINATOR_URL ??
+  "http://localhost:3001";
 
 /** True when running in a browser (client component / useEffect). */
 
@@ -17,10 +20,16 @@ export class LibraryApiError extends Error {
     public readonly status: number,
     message: string,
     public readonly code?: string,
+    public readonly upstreamPath?: string,
+    public readonly upstreamUrl?: string,
   ) {
     super(message);
     this.name = "LibraryApiError";
   }
+}
+
+export function coordinatorOrigin(): string {
+  return new URL(COORDINATOR_URL).origin;
 }
 
 export async function apiFetch<T>(
@@ -39,9 +48,10 @@ export async function apiFetch<T>(
   }
 
   const isServer = typeof window === "undefined";
+  const headers = versionHeaders();
   const res = await fetch(fullUrl.toString(), isServer
-    ? { next: { revalidate: 60 } }
-    : { headers: { "x-vibly-client-version": "0.1.0" } },
+    ? { cache: "no-store", headers }
+    : { headers },
   );
 
   if (!res.ok) {
@@ -51,6 +61,8 @@ export async function apiFetch<T>(
       res.status,
       typeof errBody?.message === "string" ? errBody.message : `HTTP ${res.status}`,
       typeof errBody?.code === "string" ? errBody.code : undefined,
+      `${fullUrl.pathname}${fullUrl.search}`,
+      fullUrl.toString(),
     );
   }
 
@@ -58,3 +70,11 @@ export async function apiFetch<T>(
   return envelope.data;
 }
 
+function versionHeaders(): Record<string, string> {
+  return {
+    "x-vibly-client-version": process.env.VIBLY_LIBRARY_CLIENT_VERSION ?? process.env.NEXT_PUBLIC_VIBLY_CLIENT_VERSION ?? "0.1.1",
+    "x-vibly-contract-version": process.env.VIBLY_LIBRARY_CONTRACT_VERSION ?? process.env.NEXT_PUBLIC_VIBLY_CONTRACT_VERSION ?? "0.1.1",
+    "x-vibly-protocol-version": process.env.VIBLY_LIBRARY_PROTOCOL_VERSION ?? process.env.NEXT_PUBLIC_VIBLY_PROTOCOL_VERSION ?? "0.2",
+    "x-vibly-client-package": "vibly-library",
+  };
+}

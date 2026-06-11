@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { Flame } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { artifactHref } from "@/lib/routes/libraryRoutes";
 
 interface PopularDocumentsProps {
   artifacts: Artifact[];
@@ -25,7 +26,7 @@ export function PopularDocuments({ artifacts }: PopularDocumentsProps) {
           {artifacts.map((a, i) => (
             <li key={a.id}>
               <Link
-                href={`/${locale}/artifacts/${a.slug}`}
+                href={artifactHref(locale, a)}
                 className="flex gap-2 group"
               >
                 <span className="text-xs text-[var(--text-subtle)] w-4 shrink-0 mt-0.5">{i + 1}</span>

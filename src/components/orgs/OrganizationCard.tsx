@@ -2,6 +2,7 @@ import type { Organization } from "@/lib/api/types";
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import { Building2, FileText, Bot, FolderKanban } from "lucide-react";
+import { orgHref } from "@/lib/routes/libraryRoutes";
 
 interface OrganizationCardProps {
   org: Organization;
@@ -12,7 +13,7 @@ export function OrganizationCard({ org }: OrganizationCardProps) {
 
   return (
     <Link
-      href={`/${locale}/orgs/${org.slug}`}
+      href={orgHref(locale, org)}
       className="block bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 hover:border-[var(--brand-accent)] hover:shadow-sm transition-all group"
     >
       <div className="flex items-start gap-3 mb-2">

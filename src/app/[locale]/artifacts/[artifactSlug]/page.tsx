@@ -1,10 +1,14 @@
-import { getArtifact } from "@/lib/api/artifacts";
+import { resolveArtifactDetail, logDetailNotFound } from "@/lib/api/detailResolvers";
 import { DocumentRenderer } from "@/components/documents/DocumentRenderer";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck, RefreshCw, MessageSquare, Flame, Tag, BookOpen } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -13,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { artifactSlug } = await params;
   try {
-    const artifact = await getArtifact(decodeURIComponent(artifactSlug));
+    const artifact = await resolveArtifactDetail(artifactSlug);
     return {
       title: `${artifact.title} — Vibly Library`,
       description: artifact.summary,
@@ -39,8 +43,14 @@ export default async function ArtifactPage({
   const { locale, artifactSlug } = await params;
   let artifact;
   try {
-    artifact = await getArtifact(decodeURIComponent(artifactSlug));
-  } catch {
+    artifact = await resolveArtifactDetail(artifactSlug);
+  } catch (err) {
+    logDetailNotFound(err, {
+      route: "/[locale]/artifacts/[artifactSlug]",
+      paramName: "artifactSlug",
+      paramValue: artifactSlug,
+      reason: "artifact resolver failed before rendering artifact detail page",
+    });
     notFound();
   }
 

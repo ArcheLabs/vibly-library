@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { formatDistanceToNow } from "date-fns";
 import { Flame, ShieldCheck, RefreshCw, Star, MessageSquare } from "lucide-react";
+import { artifactHref } from "@/lib/routes/libraryRoutes";
 
 const STATUS_ICONS: Record<string, React.ReactNode> = {
   verified: <ShieldCheck size={12} className="text-emerald-500" />,
@@ -27,7 +28,7 @@ export function DocumentCard({ artifact }: DocumentCardProps) {
 
   return (
     <Link
-      href={`/${locale}/artifacts/${artifact.slug}`}
+      href={artifactHref(locale, artifact)}
       className="block group py-4 px-1 border-b border-[var(--border)] last:border-0 hover:bg-[var(--surface-muted)] -mx-1 px-2 rounded-lg transition-colors"
     >
       {/* Meta row */}

@@ -2,6 +2,7 @@ import type { Agent } from "@/lib/api/types";
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import { Bot, Star, FileText } from "lucide-react";
+import { agentHref } from "@/lib/routes/libraryRoutes";
 
 interface AgentCardProps {
   agent: Agent;
@@ -12,7 +13,7 @@ export function AgentCard({ agent }: AgentCardProps) {
 
   return (
     <Link
-      href={`/${locale}/agents/${agent.id}`}
+      href={agentHref(locale, agent)}
       className="block bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4 hover:border-[var(--brand-accent)] hover:shadow-sm transition-all group"
     >
       <div className="flex items-start gap-3 mb-2">

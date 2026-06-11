@@ -6,6 +6,11 @@ import { OrganizationTabs } from "@/components/orgs/OrganizationTabs";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { logDetailNotFound } from "@/lib/api/detailResolvers";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -37,7 +42,13 @@ export default async function OrgDetailPage({
   let org;
   try {
     org = await getOrganization(orgSlug);
-  } catch {
+  } catch (err) {
+    logDetailNotFound(err, {
+      route: "/[locale]/orgs/[orgSlug]",
+      paramName: "orgSlug",
+      paramValue: orgSlug,
+      reason: "organization lookup failed before rendering organization detail page",
+    });
     notFound();
   }
 

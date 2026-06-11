@@ -4,6 +4,11 @@ import { AgentHeader } from "@/components/agents/AgentHeader";
 import { DocumentList } from "@/components/documents/DocumentList";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { logDetailNotFound } from "@/lib/api/detailResolvers";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const dynamicParams = true;
 
 export async function generateMetadata({
   params,
@@ -32,7 +37,13 @@ export default async function AgentDetailPage({
   let agent;
   try {
     agent = await getAgent(agentId);
-  } catch {
+  } catch (err) {
+    logDetailNotFound(err, {
+      route: "/[locale]/agents/[agentId]",
+      paramName: "agentId",
+      paramValue: agentId,
+      reason: "agent lookup failed before rendering agent detail page",
+    });
     notFound();
   }
 
